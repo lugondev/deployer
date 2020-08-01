@@ -292,7 +292,7 @@ app_install_core()
         fi
         git config --global user.email "dev@qlug.io"
         git config --global user.name "Qlug Deployer"
-        git checkout -b dev
+        git checkout -b develop
         if [[ "$GIT_CORE_ORIGIN" != "" ]]; then
             local ALIAS=$(echo $CORE_ALIAS | tr -cs '[:alnum:]\r\n' '-' | tr '[:upper:]' '[:lower:]')
             read -r -d '' COMMANDS << EOM || true
@@ -309,9 +309,9 @@ if [ "\$FAILED" == "Y" ]; then
 fi
 
 cd "$BRIDGECHAIN_PATH_RAW"
-HAS_REMOTE=\$(git branch -a | fgrep -o "remotes/origin/dev")
+HAS_REMOTE=\$(git branch -a | fgrep -o "remotes/origin/develop")
 if [ ! -z "\$HAS_REMOTE" ]; then
-    git checkout dev
+    git checkout develop
 fi
 
 YARN_SETUP="N"
@@ -337,7 +337,7 @@ EOM
         git commit -m "chore: prepare new network config 🎉"
         if [[ "$GIT_CORE_ORIGIN" != "" ]]; then
             git remote set-url origin "$GIT_CORE_ORIGIN"
-            git push --set-upstream origin dev || local CANT_PUSH="Y"
+            git push --set-upstream origin develop || local CANT_PUSH="Y"
             if [[ "$CANT_PUSH" == "Y" ]]; then
                 error "Could not push Git changes to '$GIT_CORE_ORIGIN'"
             fi
