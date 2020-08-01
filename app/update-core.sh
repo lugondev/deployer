@@ -66,8 +66,8 @@ update_core_add_upstream_remote()
 update_core_merge_from_upstream()
 {
 	heading "Merging from upstream..."
-	git config --global user.email "support@ark.io"
-    git config --global user.name "ARK Deployer"
+	git config --global user.email "dev@qlug.io"
+    git config --global user.name "Qlug Deployer"
 	git checkout -b update/"$TARGET_VERSION" || git checkout -b update/"${TARGET_VERSION}_${TIMESTAMP}"
 	git merge "$TARGET_VERSION" || true
 	info "Done"

@@ -18,8 +18,8 @@ echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/source
 sudo apt-get update && sudo apt-get install -y yarn
 
 ## Link Codebase
-if [[ ! -d ~/ark-deployer/ ]]; then
-    ln -s /vagrant ~/ark-deployer
+if [[ ! -d ~/qlug-deployer/ ]]; then
+    ln -s /vagrant ~/qlug-deployer
 fi
 
 ## Config
@@ -27,7 +27,7 @@ CONFIG_PATH="/vagrant/vagrant/config.json"
 CHAIN_NAME=$(jq -r '.chainName' "$CONFIG_PATH")
 
 ## Install Core & Explorer with Dependencies
-cd ~/ark-deployer
+cd ~/qlug-deployer
 ./bridgechain.sh install-core --config "$CONFIG_PATH" --autoinstall-deps --non-interactive
 ./bridgechain.sh install-explorer --config "$CONFIG_PATH" --skip-deps --non-interactive
 
@@ -38,8 +38,8 @@ EOS
 
 cat > ~/startup.sh <<- EOS
 #!/bin/bash -l
-~/ark-deployer/bridgechain.sh start-core --network "testnet" &>> ~/core.log &
-~/ark-deployer/bridgechain.sh start-explorer --network "testnet" &>> ~/explorer.log &
+~/qlug-deployer/bridgechain.sh start-core --network "testnet" &>> ~/core.log &
+~/qlug-deployer/bridgechain.sh start-explorer --network "testnet" &>> ~/explorer.log &
 EOS
 chmod u+x ~/startup.sh
 
@@ -52,7 +52,7 @@ API_PORT=$(jq -r '.apiPort' "$CONFIG_PATH")
 P2P_PORT=$(jq -r '.p2pPort' "$CONFIG_PATH")
 EXPLORER_PORT=$(jq -r '.explorerPort' "$CONFIG_PATH")
 
-~/ark-deployer/bridgechain.sh passphrases
+~/qlug-deployer/bridgechain.sh passphrases
 
 echo 'Rebooting Vagrant Machine - check back in a few minutes on the below:'
 echo "  Core P2P API: http://192.168.33.10:$P2P_PORT/"

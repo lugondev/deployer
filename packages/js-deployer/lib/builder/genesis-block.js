@@ -88,7 +88,7 @@ module.exports = class GenesisBlockBuilder {
   __buildDelegates() {
     const wallets = []
     for (let i = 0; i < this.forgers; i++) {
-      wallets.push(this.__createDelegateWallet(`genesis_${i + 1}`))
+      wallets.push(this.__createDelegateWallet(`qlug_genesis_${i + 1}`))
     }
 
     return wallets

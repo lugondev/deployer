@@ -48,7 +48,7 @@ EOF
         if [ ! -z "$LICENSE_EMAIL" ]; then
             local LICENSE="$LICENSE <$LICENSE_EMAIL>"
         fi
-        sed -i -E "s/^(Copyright.+Ark Ecosystem.*)$/\1\n$LICENSE/g" "$EXPLORER_PATH/LICENSE"
+        sed -i -E "s/^(Copyright.+Qlug Blockchain.*)$/\1\n$LICENSE/g" "$EXPLORER_PATH/LICENSE"
     fi
 
     if [[ "$GIT_EXPLORER_COMMIT" == "Y" ]]; then
@@ -57,14 +57,14 @@ EOF
         if [[ "$GIT_USE_SSH" == "Y" ]]; then
             git config url."git@github.com:".insteadOf "https://github.com/"
         fi
-        git config --global user.email "support@ark.io"
-        git config --global user.name "ARK Deployer"
-        git checkout -b chore/bridgechain-changes
+        git config --global user.email "dev@qlug.io"
+        git config --global user.name "Qlug Deployer"
+        git checkout -b dev
         git add .
         git commit -m "chore: prepare new network config 🎉"
         if [[ "$GIT_EXPLORER_ORIGIN" != "" ]]; then
             git remote set-url origin "$GIT_EXPLORER_ORIGIN"
-            git push --set-upstream origin chore/bridgechain-changes || local CANT_PUSH="Y"
+            git push --set-upstream origin dev || local CANT_PUSH="Y"
             if [[ "$CANT_PUSH" == "Y" ]]; then
                 echo "Could not push Git changes to '$GIT_EXPLORER_ORIGIN'"
             fi

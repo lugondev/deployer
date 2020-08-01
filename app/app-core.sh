@@ -105,7 +105,7 @@ app_install_core()
 
     rm -rf "$CONFIG_PATH_MAINNET" "$CONFIG_PATH_DEVNET" "$CONFIG_PATH_TESTNET" "$BRIDGECHAIN_PATH"
 
-    git clone https://github.com/ArkEcosystem/core.git --branch 2.6.49 --single-branch "$BRIDGECHAIN_PATH"
+    git clone https://github.com/lugondev/core.git --branch master "$BRIDGECHAIN_PATH"
 
     local DYNAMIC_FEE_ENABLED="false"
     if [[ "$FEE_DYNAMIC_ENABLED" == "Y" ]]; then
@@ -267,9 +267,9 @@ app_install_core()
     local PACKAGE_JSON=$(cat "$PACKAGE_JSON_PATH" | jq ".name = \"@${CORE_ALIAS}/core\"")
     local PACKAGE_JSON=$(echo "$PACKAGE_JSON" | jq ".description = \"Core of the ${CHAIN_NAME} Blockchain\"")
     local PACKAGE_JSON=$(echo "$PACKAGE_JSON" | jq ".bin[\"${CORE_ALIAS}\"] = \"./bin/run\"")
-    local PACKAGE_JSON=$(echo "$PACKAGE_JSON" | jq "del(.bin.ark)")
+    local PACKAGE_JSON=$(echo "$PACKAGE_JSON" | jq "del(.bin.qlug)")
     local PACKAGE_JSON=$(echo "$PACKAGE_JSON" | jq ".scripts[\"${CORE_ALIAS}\"] = \"./bin/run\"")
-    local PACKAGE_JSON=$(echo "$PACKAGE_JSON" | jq "del(.scripts.ark)")
+    local PACKAGE_JSON=$(echo "$PACKAGE_JSON" | jq "del(.scripts.qlug)")
     local PACKAGE_JSON=$(echo "$PACKAGE_JSON" | jq ".oclif.bin = \"${CORE_ALIAS}\"")
     echo $PACKAGE_JSON
     rm "$PACKAGE_JSON_PATH"
@@ -281,7 +281,7 @@ app_install_core()
         if [ ! -z "$LICENSE_EMAIL" ]; then
             local LICENSE="$LICENSE <$LICENSE_EMAIL>"
         fi
-        sed -i -E "s/^(Copyright.+Ark Ecosystem.*)$/\1\n$LICENSE/g" "$BRIDGECHAIN_PATH/LICENSE"
+        sed -i -E "s/^(Copyright.+QLUG Blockchain.*)$/\1\n$LICENSE/g" "$BRIDGECHAIN_PATH/LICENSE"
     fi
 
     if [[ "$GIT_CORE_COMMIT" == "Y" ]]; then
@@ -290,14 +290,14 @@ app_install_core()
         if [[ "$GIT_USE_SSH" == "Y" ]]; then
             git config url."git@github.com:".insteadOf "https://github.com/"
         fi
-        git config --global user.email "support@ark.io"
-        git config --global user.name "ARK Deployer"
-        git checkout -b chore/bridgechain-changes
+        git config --global user.email "dev@qlug.io"
+        git config --global user.name "Qlug Deployer"
+        git checkout -b dev
         if [[ "$GIT_CORE_ORIGIN" != "" ]]; then
             local ALIAS=$(echo $CORE_ALIAS | tr -cs '[:alnum:]\r\n' '-' | tr '[:upper:]' '[:lower:]')
             read -r -d '' COMMANDS << EOM || true
 shopt -s expand_aliases
-alias ark="$BRIDGECHAIN_PATH_RAW/packages/core/bin/run"
+alias qlug="$BRIDGECHAIN_PATH_RAW/packages/core/bin/run"
 echo 'alias $ALIAS="$BRIDGECHAIN_PATH_RAW/packages/core/bin/run"' >> ~/.bashrc
 
 rm -rf "$BRIDGECHAIN_PATH_RAW"
@@ -309,9 +309,9 @@ if [ "\$FAILED" == "Y" ]; then
 fi
 
 cd "$BRIDGECHAIN_PATH_RAW"
-HAS_REMOTE=\$(git branch -a | fgrep -o "remotes/origin/chore/bridgechain-changes")
+HAS_REMOTE=\$(git branch -a | fgrep -o "remotes/origin/dev")
 if [ ! -z "\$HAS_REMOTE" ]; then
-    git checkout chore/bridgechain-changes
+    git checkout dev
 fi
 
 YARN_SETUP="N"
@@ -337,7 +337,7 @@ EOM
         git commit -m "chore: prepare new network config 🎉"
         if [[ "$GIT_CORE_ORIGIN" != "" ]]; then
             git remote set-url origin "$GIT_CORE_ORIGIN"
-            git push --set-upstream origin chore/bridgechain-changes || local CANT_PUSH="Y"
+            git push --set-upstream origin dev || local CANT_PUSH="Y"
             if [[ "$CANT_PUSH" == "Y" ]]; then
                 error "Could not push Git changes to '$GIT_CORE_ORIGIN'"
             fi
